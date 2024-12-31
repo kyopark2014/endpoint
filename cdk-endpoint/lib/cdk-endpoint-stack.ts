@@ -129,15 +129,15 @@ export class CdkEndpointStack extends cdk.Stack {
       })
     );  
 
-    // const BedrockPolicy = new iam.PolicyStatement({  
-    //   resources: ['*'],
-    //   actions: ['bedrock:*'],
-    // });        
-    // ec2Role.attachInlinePolicy( // add bedrock policy
-    //   new iam.Policy(this, `bedrock-policy-ec2-for-${projectName}`, {
-    //     statements: [BedrockPolicy],
-    //   }),
-    // );     
+    const BedrockPolicy = new iam.PolicyStatement({  
+      resources: ['*'],
+      actions: ['bedrock:*'],
+    });        
+    ec2Role.attachInlinePolicy( // add bedrock policy
+      new iam.Policy(this, `bedrock-policy-ec2-for-${projectName}`, {
+        statements: [BedrockPolicy],
+      }),
+    );     
 
     const ec2Policy = new iam.PolicyStatement({  
       resources: ['arn:aws:ec2:*:*:instance/*'],
