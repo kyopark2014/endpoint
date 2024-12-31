@@ -42,8 +42,8 @@ export class CdkEndpointStack extends cdk.Stack {
       vpcName: `vpc-for-${projectName}`,
       maxAzs: 2,
       ipAddresses: ec2.IpAddresses.cidr("10.64.0.0/16"),
-      natGateways: 1,
-      createInternetGateway: true,      
+      // natGateways: 1,
+      // createInternetGateway: true,      
       subnetConfiguration: [
         {
           cidrMask: 24,
@@ -99,20 +99,10 @@ export class CdkEndpointStack extends cdk.Stack {
     const ec2Sg = new ec2.SecurityGroup(this, `ec2-sg-for-${projectName}`,
       {
         vpc: vpc,
-        allowAllOutbound: false,
+        allowAllOutbound: true,
         description: "Security group for ec2",
         securityGroupName: `ec2-sg-for-${projectName}`,
       }
-    );
-    ec2Sg.addIngressRule(
-      ec2.Peer.anyIpv4(),
-      ec2.Port.tcp(22),
-      'SSH',
-    );
-    ec2Sg.addEgressRule( // for TLS
-      ec2.Peer.anyIpv4(),
-      ec2.Port.tcp(22),
-      'SSH',
     );
 
     // EC2 Role
@@ -163,7 +153,7 @@ export class CdkEndpointStack extends cdk.Stack {
       }),
       vpc: vpc,
       vpcSubnets: {
-        subnets: vpc.publicSubnets  
+        subnets: vpc.privateSubnets  
       },
       securityGroup: ec2Sg,
       role: ec2Role,
