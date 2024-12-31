@@ -62,6 +62,11 @@ export class CdkEndpointStack extends cdk.Stack {
     // s3 endpoint
     const s3BucketAcessPoint = vpc.addGatewayEndpoint(`s3Endpoint-${projectName}`, {
       service: ec2.GatewayVpcEndpointAwsService.S3,
+      subnets: [
+        {
+          subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+        }
+      ]
     });
 
     s3BucketAcessPoint.addToPolicy(
