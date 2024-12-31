@@ -64,7 +64,7 @@ aws bedrock list-foundation-models --region us-west-2 --cli-connect-timeout 5
 //   vpc: vpc,
 //   service: new ec2.InterfaceVpcEndpointService('com.amazonaws.us-west-2.bedrock', 443),
 //   subnets: {
-//     subnetType: ec2.SubnetType.PRIVATE_ISOLATED
+//     subnetType: ec2.SubnetType.PRIVATE_WITH_ENGRESS
 //   }
 // });
 ```
