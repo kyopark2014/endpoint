@@ -6,7 +6,7 @@
 
 - EC2를 private subnet에 두고 security group의 allowAllOutbound를 false로 설정 SSE도 접속이 불가합니다.
 - 이때, HTTPS (443)를 열면 SSE 접속은 되지만 aws cli도 HTTPS를 사용하므로 접속이 불가하였습니다.
-- 
+- 추후 방안을 찾아서 동작 테스트 예정입니다.
 
 <img width="800" alt="image" src="https://github.com/user-attachments/assets/157efbad-fe3a-415c-a3db-80789bb613ec" />
 
