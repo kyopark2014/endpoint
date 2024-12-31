@@ -43,12 +43,7 @@ export class CdkEndpointStack extends cdk.Stack {
       maxAzs: 2,
       ipAddresses: ec2.IpAddresses.cidr("10.64.0.0/16"),
       natGateways: 1,
-      createInternetGateway: true,
-      gatewayEndpoints: {
-        S3: {
-          service: ec2.GatewayVpcEndpointAwsService.S3,
-        },
-      },
+      createInternetGateway: true,      
       subnetConfiguration: [
         {
           cidrMask: 24,
