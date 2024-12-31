@@ -75,4 +75,4 @@ aws bedrock list-foundation-models --region us-west-2 --cli-connect-timeout 5
 cdk deploy --all
 ```
 
-이후 
+이후 테스트 하여야 하니 이미 상기 조건으론 접속 가능하여 테스트가 안되었습니다. 안되는 테스트 환경을 만들어서 endpoint enable하고 다시 테스트 예정입니다.
