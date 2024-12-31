@@ -104,10 +104,15 @@ export class CdkEndpointStack extends cdk.Stack {
         securityGroupName: `ec2-sg-for-${projectName}`,
       }
     );
-    ec2Sg.addEgressRule( // for SSM
-      ec2.Peer.anyIpv4(), 
-      ec2.Port.tcp(443),
-      'HTTPS',
+    ec2Sg.addIngressRule(
+      ec2.Peer.anyIpv4(),
+      ec2.Port.tcp(22),
+      'SSH',
+    );
+    ec2Sg.addEgressRule( // for TLS
+      ec2.Peer.anyIpv4(),
+      ec2.Port.tcp(22),
+      'SSH',
     );
 
     // EC2 Role
@@ -158,7 +163,7 @@ export class CdkEndpointStack extends cdk.Stack {
       }),
       vpc: vpc,
       vpcSubnets: {
-        subnets: vpc.privateSubnets  
+        subnets: vpc.publicSubnets  
       },
       securityGroup: ec2Sg,
       role: ec2Role,
