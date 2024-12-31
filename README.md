@@ -8,6 +8,8 @@
 - 이때, HTTPS (443)를 열면 SSE 접속은 되지만 aws cli도 HTTPS를 사용하므로 접속이 불가하였습니다.
 - 
 
+<img width="621" alt="image" src="https://github.com/user-attachments/assets/dc66b55a-7634-4432-80ce-372d3a394fb7" />
+
 
 ## 주요 설정
 
