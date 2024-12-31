@@ -104,11 +104,11 @@ export class CdkEndpointStack extends cdk.Stack {
         securityGroupName: `ec2-sg-for-${projectName}`,
       }
     );
-    ec2Sg.addIngressRule( // for SSM
-      ec2.Peer.anyIpv4(), 
-      ec2.Port.tcp(443),
-      'HTTPS',
-    );
+    // ec2Sg.addIngressRule( // for SSM
+    //   ec2.Peer.anyIpv4(), 
+    //   ec2.Port.tcp(443),
+    //   'HTTPS',
+    // );
 
     // EC2 Role
     const ec2Role = new iam.Role(this, `role-ec2-for-${projectName}`, {
