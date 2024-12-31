@@ -5,7 +5,7 @@
 원래 계획은 [AWS PrivateLink를 통해 다른 리전의 Amazon Bedrock을 내부 네트워크에서 사용하기](https://aws.amazon.com/ko/blogs/tech/cross-region-bedrock-via-private-link/)을 참조해서 Private Subnet에 있는 EC2에 SSE로 접속 후 Endpoint 설치 전후로 바꾸어 테스트하려고 진행했으나 아래 문제가 있었습니다.
 
 - EC2를 private subnet에 두고 security group의 allowAllOutbound를 false로 설정 SSE도 접속이 불가합니다.
-- 이때, HTTPS (443)를 열면 SSE 접속은 되지만 aws cli도 HTTPS를 사용하므로 접속이 불가하였습니다.
+- 이때, HTTPS (443)를 열면 SSE 접속은 되지만 aws cli도 HTTPS를 사용하므로 접속이 가능하였습니다. (Endpoint 테스트 불가)
 - 추후 방안을 찾아서 동작 테스트 예정입니다.
 
 <img width="800" alt="image" src="https://github.com/user-attachments/assets/157efbad-fe3a-415c-a3db-80789bb613ec" />
