@@ -42,8 +42,8 @@ export class CdkEndpointStack extends cdk.Stack {
       vpcName: `vpc-for-${projectName}`,
       maxAzs: 2,
       ipAddresses: ec2.IpAddresses.cidr("10.64.0.0/16"),
-      // natGateways: 1,
-      // createInternetGateway: true,      
+      natGateways: 0,
+      createInternetGateway: false,      
       subnetConfiguration: [
         {
           cidrMask: 24,
