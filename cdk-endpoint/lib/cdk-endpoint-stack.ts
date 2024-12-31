@@ -72,7 +72,7 @@ export class CdkEndpointStack extends cdk.Stack {
     ); 
 
     // Bedrock endpoint
-    new ec2.InterfaceVpcEndpoint(this, `VPC Endpoint-${projectName}`, {
+    new ec2.InterfaceVpcEndpoint(this, `vpc-endpoint-${projectName}`, {
       privateDnsEnabled: true,
       vpc: vpc,
       service: new ec2.InterfaceVpcEndpointService('com.amazonaws.us-west-2.bedrock', 443),
