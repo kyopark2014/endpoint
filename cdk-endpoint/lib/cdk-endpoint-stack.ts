@@ -19,7 +19,7 @@ export class CdkEndpointStack extends cdk.Stack {
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
-      publicReadAccess: false,
+      publicReadAccess: false,      
       versioned: false,
       cors: [
         {
@@ -30,7 +30,7 @@ export class CdkEndpointStack extends cdk.Stack {
           ],
           allowedOrigins: ['*'],
         },
-      ],
+      ],      
     });
     new cdk.CfnOutput(this, 'bucketName', {
       value: s3Bucket.bucketName,
@@ -44,6 +44,11 @@ export class CdkEndpointStack extends cdk.Stack {
       ipAddresses: ec2.IpAddresses.cidr("10.64.0.0/16"),
       natGateways: 1,
       createInternetGateway: true,
+      gatewayEndpoints: {
+        S3: {
+          service: ec2.GatewayVpcEndpointAwsService.S3,
+        },
+      },
       subnetConfiguration: [
         {
           cidrMask: 24,
@@ -54,19 +59,27 @@ export class CdkEndpointStack extends cdk.Stack {
           cidrMask: 24,
           name: `private-subnet-for-${projectName}`,
           subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS
-          // subnetType: ec2.SubnetType.PRIVATE_ISOLATED
         }
       ]
     });  
 
+    // const endpoint = ec2.VpcEndpointService(this, `vpc-endpoint-for-${projectName}`, {
+    //   vpc: vpc,
+    //   service: new ec2.InterfaceVpcEndpointService(`com.amazonaws.${region}.ssm`, 443),
+    //   subnets: {
+    //     subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS
+    //   },
+    //   securityGroups: [
+    //     ec2.SecurityGroup.fromSecurityGroupId(this, `sg-for-${projectName}`, vpc.vpcDefaultSecurityGroup)
+    //   ],
+    //   privateDnsEnabled: true,
+    //   open: true        
+    // });
+
     // s3 endpoint
     const s3BucketAcessPoint = vpc.addGatewayEndpoint(`s3Endpoint-${projectName}`, {
       service: ec2.GatewayVpcEndpointAwsService.S3,      
-      subnets: [
-        {
-          subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
-        }
-      ]
+      subnets: [{subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS}]
     });
 
     s3BucketAcessPoint.addToPolicy(
@@ -83,7 +96,7 @@ export class CdkEndpointStack extends cdk.Stack {
     //   vpc: vpc,
     //   service: new ec2.InterfaceVpcEndpointService('com.amazonaws.us-west-2.bedrock', 443),
     //   subnets: {
-    //     subnetType: ec2.SubnetType.PRIVATE_ISOLATED
+    //     subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS
     //   }
     // });
 
