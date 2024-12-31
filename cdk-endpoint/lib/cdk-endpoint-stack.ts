@@ -85,7 +85,7 @@ export class CdkEndpointStack extends cdk.Stack {
     const ec2Sg = new ec2.SecurityGroup(this, `ec2-sg-for-${projectName}`,
       {
         vpc: vpc,
-        allowAllOutbound: false,
+        allowAllOutbound: true,
         description: "Security group for ec2",
         securityGroupName: `ec2-sg-for-${projectName}`,
       }
