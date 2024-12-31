@@ -1,7 +1,17 @@
-# endpoint
-It shows how to deploy endpoints for security in AWS.
+# AWS Endpoint
 
-EC2를 private subnet에 두고 security group의 allowAllOutbound를 false로 설정하면 외부로 트래픽이 전송되지 않습니다.
+(추후 다시 시도)
+
+원래 계획은 [AWS PrivateLink를 통해 다른 리전의 Amazon Bedrock을 내부 네트워크에서 사용하기](https://aws.amazon.com/ko/blogs/tech/cross-region-bedrock-via-private-link/)을 참조해서 Private Subnet에 있는 EC2에 SSE로 접속 후 Endpoint 설치 전후로 바꾸어 테스트하려고 진행했으나 아래 문제가 있었습니다.
+
+- EC2를 private subnet에 두고 security group의 allowAllOutbound를 false로 설정 SSE도 접속이 불가합니다.
+- 이때, HTTPS (443)를 열면 SSE 접속은 되지만 aws cli도 HTTPS를 사용하므로 접속이 불가하였습니다.
+- 
+
+
+## 주요 설정
+
+EC2의 Security Group은 아래와 같습니다. 
 
 ```java
 const ec2Sg = new ec2.SecurityGroup(this, `ec2-sg-for-${projectName}`,
@@ -14,19 +24,19 @@ const ec2Sg = new ec2.SecurityGroup(this, `ec2-sg-for-${projectName}`,
 );
 ```
 
-이후 아래와 같이 명렁어를 입력하면 S3에 대한 연결을 확인할 수 있습니다. 이때, 외부로 접속이 안되므로 일정시간이 지나면 실패합니다. 
+S3의 접속 확인을 위해 사용하는 명령어는 아래와 같습니다. 
 
 ```text
 ls storage-for-endpoint-262976740991-us-west-2 --cli-connect-timeout 5
 ```
 
-마찬가지로 Bedrock에 대한 연결을 아래 명령어로 확인합니다. 마찬가지로 연결이 되지 않습니다.
+Bedrock에 대한 연결을 아래 명령어로 확인합니다. 
 
 ```text
 aws bedrock list-foundation-models --region us-west-2 --cli-connect-timeout 5
 ```
 
-각 테스트 결과는 아래와 같습니다.
+접속이 안되는 경우는 아래와 같습니다.
 
 ![image](https://github.com/user-attachments/assets/8e88961c-d244-447e-b98f-d2692b44f941)
 
