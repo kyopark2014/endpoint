@@ -19,7 +19,7 @@ export class CdkEndpointStack extends cdk.Stack {
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
-      publicReadAccess: false,      
+      publicReadAccess: false,
       versioned: false,
       cors: [
         {
@@ -30,7 +30,7 @@ export class CdkEndpointStack extends cdk.Stack {
           ],
           allowedOrigins: ['*'],
         },
-      ],      
+      ],
     });
     new cdk.CfnOutput(this, 'bucketName', {
       value: s3Bucket.bucketName,
@@ -53,47 +53,34 @@ export class CdkEndpointStack extends cdk.Stack {
         {
           cidrMask: 24,
           name: `private-subnet-for-${projectName}`,
-          subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS
+          // subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS
+          subnetType: ec2.SubnetType.PRIVATE_ISOLATED
         }
       ]
     });  
 
-    // const endpoint = ec2.VpcEndpointService(this, `vpc-endpoint-for-${projectName}`, {
-    //   vpc: vpc,
-    //   service: new ec2.InterfaceVpcEndpointService(`com.amazonaws.${region}.ssm`, 443),
-    //   subnets: {
-    //     subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS
-    //   },
-    //   securityGroups: [
-    //     ec2.SecurityGroup.fromSecurityGroupId(this, `sg-for-${projectName}`, vpc.vpcDefaultSecurityGroup)
-    //   ],
-    //   privateDnsEnabled: true,
-    //   open: true        
-    // });
-
     // s3 endpoint
-    // const s3BucketAcessPoint = vpc.addGatewayEndpoint(`s3Endpoint-${projectName}`, {
-    //   service: ec2.GatewayVpcEndpointAwsService.S3,      
-    //   subnets: [{subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS}]
-    // });
+    const s3BucketAcessPoint = vpc.addGatewayEndpoint(`s3Endpoint-${projectName}`, {
+      service: ec2.GatewayVpcEndpointAwsService.S3,
+    });
 
-    // s3BucketAcessPoint.addToPolicy(
-    //   new iam.PolicyStatement({
-    //     principals: [new iam.AnyPrincipal()],
-    //     actions: ['s3:*'],
-    //     resources: ['*'],
-    //   }),
-    // ); 
+    s3BucketAcessPoint.addToPolicy(
+      new iam.PolicyStatement({
+        principals: [new iam.AnyPrincipal()],
+        actions: ['s3:*'],
+        resources: ['*'],
+      }),
+    ); 
 
     // Bedrock endpoint
-    // new ec2.InterfaceVpcEndpoint(this, `VPC Endpoint-${projectName}`, {
-    //   privateDnsEnabled: true,
-    //   vpc: vpc,
-    //   service: new ec2.InterfaceVpcEndpointService('com.amazonaws.us-west-2.bedrock', 443),
-    //   subnets: {
-    //     subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS
-    //   }
-    // });
+    new ec2.InterfaceVpcEndpoint(this, `VPC Endpoint-${projectName}`, {
+      privateDnsEnabled: true,
+      vpc: vpc,
+      service: new ec2.InterfaceVpcEndpointService('com.amazonaws.us-west-2.bedrock', 443),
+      subnets: {
+        subnetType: ec2.SubnetType.PRIVATE_ISOLATED
+      }
+    });
 
     // EC2 Security Group
     const ec2Sg = new ec2.SecurityGroup(this, `ec2-sg-for-${projectName}`,
@@ -121,7 +108,7 @@ export class CdkEndpointStack extends cdk.Stack {
     ec2Role.attachInlinePolicy( // for isengard
       new iam.Policy(this, `pvre-policy-ec2-for-${projectName}`, {
         statements: [pvrePolicy],
-      })
+      }),
     );  
 
     const BedrockPolicy = new iam.PolicyStatement({  
