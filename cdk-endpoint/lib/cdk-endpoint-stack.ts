@@ -104,8 +104,8 @@ export class CdkEndpointStack extends cdk.Stack {
         securityGroupName: `ec2-sg-for-${projectName}`,
       }
     );
-    ec2Sg.addIngressRule(
-      ec2.Peer.anyIpv4(),
+    ec2Sg.addIngressRule( // for SSM
+      ec2.Peer.anyIpv4(), 
       ec2.Port.tcp(443),
       'HTTPS',
     );
