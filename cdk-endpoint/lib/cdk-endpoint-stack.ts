@@ -99,7 +99,7 @@ export class CdkEndpointStack extends cdk.Stack {
     const ec2Sg = new ec2.SecurityGroup(this, `ec2-sg-for-${projectName}`,
       {
         vpc: vpc,
-        allowAllOutbound: false,
+        allowAllOutbound: true,
         description: "Security group for ec2",
         securityGroupName: `ec2-sg-for-${projectName}`,
       }
@@ -121,7 +121,7 @@ export class CdkEndpointStack extends cdk.Stack {
     ec2Role.attachInlinePolicy( // for isengard
       new iam.Policy(this, `pvre-policy-ec2-for-${projectName}`, {
         statements: [pvrePolicy],
-      }),
+      })
     );  
 
     const BedrockPolicy = new iam.PolicyStatement({  
