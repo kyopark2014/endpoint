@@ -72,18 +72,18 @@ export class CdkEndpointStack extends cdk.Stack {
     // });
 
     // s3 endpoint
-    const s3BucketAcessPoint = vpc.addGatewayEndpoint(`s3Endpoint-${projectName}`, {
-      service: ec2.GatewayVpcEndpointAwsService.S3,      
-      subnets: [{subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS}]
-    });
+    // const s3BucketAcessPoint = vpc.addGatewayEndpoint(`s3Endpoint-${projectName}`, {
+    //   service: ec2.GatewayVpcEndpointAwsService.S3,      
+    //   subnets: [{subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS}]
+    // });
 
-    s3BucketAcessPoint.addToPolicy(
-      new iam.PolicyStatement({
-        principals: [new iam.AnyPrincipal()],
-        actions: ['s3:*'],
-        resources: ['*'],
-      }),
-    ); 
+    // s3BucketAcessPoint.addToPolicy(
+    //   new iam.PolicyStatement({
+    //     principals: [new iam.AnyPrincipal()],
+    //     actions: ['s3:*'],
+    //     resources: ['*'],
+    //   }),
+    // ); 
 
     // Bedrock endpoint
     // new ec2.InterfaceVpcEndpoint(this, `VPC Endpoint-${projectName}`, {
@@ -103,6 +103,11 @@ export class CdkEndpointStack extends cdk.Stack {
         description: "Security group for ec2",
         securityGroupName: `ec2-sg-for-${projectName}`,
       }
+    );
+    ec2Sg.addIngressRule(
+      ec2.Peer.anyIpv4(),
+      ec2.Port.tcp(443),
+      'HTTPS',
     );
 
     // EC2 Role
@@ -124,15 +129,15 @@ export class CdkEndpointStack extends cdk.Stack {
       })
     );  
 
-    const BedrockPolicy = new iam.PolicyStatement({  
-      resources: ['*'],
-      actions: ['bedrock:*'],
-    });        
-    ec2Role.attachInlinePolicy( // add bedrock policy
-      new iam.Policy(this, `bedrock-policy-ec2-for-${projectName}`, {
-        statements: [BedrockPolicy],
-      }),
-    );     
+    // const BedrockPolicy = new iam.PolicyStatement({  
+    //   resources: ['*'],
+    //   actions: ['bedrock:*'],
+    // });        
+    // ec2Role.attachInlinePolicy( // add bedrock policy
+    //   new iam.Policy(this, `bedrock-policy-ec2-for-${projectName}`, {
+    //     statements: [BedrockPolicy],
+    //   }),
+    // );     
 
     const ec2Policy = new iam.PolicyStatement({  
       resources: ['arn:aws:ec2:*:*:instance/*'],
