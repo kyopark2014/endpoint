@@ -76,10 +76,7 @@ export class CdkEndpointStack extends cdk.Stack {
     new ec2.InterfaceVpcEndpoint(this, `VPC Endpoint-${projectName}`, {
       privateDnsEnabled: true,
       vpc: vpc,
-      service: new ec2.InterfaceVpcEndpointService('com.amazonaws.us-west-2.bedrock', 443),
-      subnets: {
-        subnetType: ec2.SubnetType.PRIVATE_ISOLATED
-      }
+      service: new ec2.InterfaceVpcEndpointService('com.amazonaws.us-west-2.bedrock', 443)
     });
 
     // EC2 Security Group
