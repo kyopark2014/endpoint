@@ -53,18 +53,18 @@ export class CdkEndpointStack extends cdk.Stack {
         {
           cidrMask: 24,
           name: `private-subnet-for-${projectName}`,
-          // subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS
-          subnetType: ec2.SubnetType.PRIVATE_ISOLATED
+          subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS
+          // subnetType: ec2.SubnetType.PRIVATE_ISOLATED
         }
       ]
     });  
 
     // s3 endpoint
     const s3BucketAcessPoint = vpc.addGatewayEndpoint(`s3Endpoint-${projectName}`, {
-      service: ec2.GatewayVpcEndpointAwsService.S3,
+      service: ec2.GatewayVpcEndpointAwsService.S3,      
       subnets: [
         {
-          subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+          subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
         }
       ]
     });
