@@ -73,11 +73,14 @@ export class CdkEndpointStack extends cdk.Stack {
     ); 
 
     // Bedrock endpoint
-    new ec2.InterfaceVpcEndpoint(this, `VPC Endpoint-${projectName}`, {
-      privateDnsEnabled: true,
-      vpc: vpc,
-      service: new ec2.InterfaceVpcEndpointService('com.amazonaws.us-west-2.bedrock', 443)
-    });
+    // new ec2.InterfaceVpcEndpoint(this, `VPC Endpoint-${projectName}`, {
+    //   privateDnsEnabled: true,
+    //   vpc: vpc,
+    //   service: new ec2.InterfaceVpcEndpointService('com.amazonaws.us-west-2.bedrock', 443),
+    //   subnets: {
+    //     subnetType: ec2.SubnetType.PRIVATE_ISOLATED
+    //   }
+    // });
 
     // EC2 Security Group
     const ec2Sg = new ec2.SecurityGroup(this, `ec2-sg-for-${projectName}`,
