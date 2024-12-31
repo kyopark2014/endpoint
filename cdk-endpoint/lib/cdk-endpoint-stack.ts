@@ -42,7 +42,7 @@ export class CdkEndpointStack extends cdk.Stack {
       vpcName: `vpc-for-${projectName}`,
       maxAzs: 2,
       ipAddresses: ec2.IpAddresses.cidr("10.64.0.0/16"),
-      natGateways: 0,
+      natGateways: 1,
       createInternetGateway: true,
       subnetConfiguration: [
         {
@@ -99,7 +99,7 @@ export class CdkEndpointStack extends cdk.Stack {
     const ec2Sg = new ec2.SecurityGroup(this, `ec2-sg-for-${projectName}`,
       {
         vpc: vpc,
-        allowAllOutbound: true,
+        allowAllOutbound: false,
         description: "Security group for ec2",
         securityGroupName: `ec2-sg-for-${projectName}`,
       }
