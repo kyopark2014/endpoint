@@ -11,6 +11,9 @@
 <img width="800" alt="image" src="https://github.com/user-attachments/assets/157efbad-fe3a-415c-a3db-80789bb613ec" />
 
 
+
+
+
 ## 주요 설정
 
 EC2의 Security Group은 아래와 같습니다. 
@@ -45,7 +48,6 @@ aws bedrock list-foundation-models --region us-west-2 --cli-connect-timeout 5
 [cdk-endpoint-stack.ts](./cdk-endpoint/cdk-endpoint-stack.ts)에서 아래의 주석된 부분을 풀어서 S3와 Bedrock에 대한 endpoint를 설치할 준비를 합니다. 
 
 ```text
-// s3 endpoint
 // const s3BucketAcessPoint = vpc.addGatewayEndpoint(`s3Endpoint-${projectName}`, {
 //   service: ec2.GatewayVpcEndpointAwsService.S3,
 // });
@@ -58,15 +60,19 @@ aws bedrock list-foundation-models --region us-west-2 --cli-connect-timeout 5
 //   }),
 // ); 
 
-// Bedrock endpoint
-// new ec2.InterfaceVpcEndpoint(this, `VPC Endpoint-${projectName}`, {
+// const bedrockEndpoint = vpc.addInterfaceEndpoint(`bedrock-endpoint-${projectName}`, {
 //   privateDnsEnabled: true,
-//   vpc: vpc,
-//   service: new ec2.InterfaceVpcEndpointService('com.amazonaws.us-west-2.bedrock', 443),
-//   subnets: {
-//     subnetType: ec2.SubnetType.PRIVATE_WITH_ENGRESS
-//   }
+//   service: new ec2.InterfaceVpcEndpointService(`com.amazonaws.${region}.bedrock-runtime`, 443)
 // });
+// bedrockEndpoint.connections.allowDefaultPortFrom(ec2.Peer.ipv4(vpc.vpcCidrBlock), `allowBedrockPortFrom-${projectName}`)
+
+// bedrockEndpoint.addToPolicy(
+//   new iam.PolicyStatement({
+//     principals: [new iam.AnyPrincipal()],
+//     actions: ['bedrock:*'],
+//     resources: ['*'],
+//   }),
+// ); 
 ```
 
 아래 명령어로 endpoint을 설치합니다. 
