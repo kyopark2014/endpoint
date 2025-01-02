@@ -1,6 +1,8 @@
 # AWS Endpoint
 
-(추후 다시 시도)
+[Endpoint 확인 방법](https://github.com/kyopark2014/llm-streamlit?tab=readme-ov-file#endpoint-%ED%99%95%EC%9D%B8-%EB%B0%A9%EB%B2%95)와 같이 NAT를 넣은 상태에서 동작학인 후에 NAT를 0으로 하면, endpoint를 제외한 모든 외부 접속이 끊겨서 Bedrock와 S3에 대한 테스트를 완료할 수 있었습니다.
+
+SSE로는 아래 테스트가 안되는것으로 보여집니다. (2025.1.3)
 
 원래 계획은 [AWS PrivateLink를 통해 다른 리전의 Amazon Bedrock을 내부 네트워크에서 사용하기](https://aws.amazon.com/ko/blogs/tech/cross-region-bedrock-via-private-link/)을 참조해서 Private Subnet에 있는 EC2에 SSE로 접속 후 Endpoint 설치 전후로 바꾸어 테스트하려고 진행했으나 아래 문제가 있었습니다.
 
