@@ -58,7 +58,6 @@ export class CdkEndpointStack extends cdk.Stack {
       ]
     });  
 
-    // s3 endpoint
     const s3BucketAcessPoint = vpc.addGatewayEndpoint(`s3Endpoint-${projectName}`, {
       service: ec2.GatewayVpcEndpointAwsService.S3,
     });
@@ -71,16 +70,20 @@ export class CdkEndpointStack extends cdk.Stack {
       }),
     ); 
 
-    // Bedrock endpoint
-    new ec2.InterfaceVpcEndpoint(this, `vpc-endpoint-${projectName}`, {
+    const bedrockEndpoint = vpc.addInterfaceEndpoint(`bedrock-endpoint-${projectName}`, {
       privateDnsEnabled: true,
-      vpc: vpc,
-      service: new ec2.InterfaceVpcEndpointService('com.amazonaws.us-west-2.bedrock', 443),
-      subnets: {
-        subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS
-      }
+      service: new ec2.InterfaceVpcEndpointService(`com.amazonaws.${region}.bedrock-runtime`, 443)
     });
+    bedrockEndpoint.connections.allowDefaultPortFrom(ec2.Peer.ipv4(vpc.vpcCidrBlock), `allowBedrockPortFrom-${projectName}`)
 
+    bedrockEndpoint.addToPolicy(
+      new iam.PolicyStatement({
+        principals: [new iam.AnyPrincipal()],
+        actions: ['bedrock:*'],
+        resources: ['*'],
+      }),
+    ); 
+    
     // EC2 Security Group
     const ec2Sg = new ec2.SecurityGroup(this, `ec2-sg-for-${projectName}`,
       {
